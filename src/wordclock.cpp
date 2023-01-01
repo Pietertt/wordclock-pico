@@ -225,6 +225,8 @@ namespace Wordclock {
             default:
                 break;
         }
+
+        this->VIJF->on();
     }
 
     void Wordclock::commit() {
@@ -285,26 +287,35 @@ namespace Wordclock {
 
     void Wordclock::random() {
         this->allOff();
+        this->allOn();
+        this->KWART->off();
+        // this->KWART->on();
+        // this->TIEN->on();
+        // this->HET->on();
+        this->commit();
 
-        int usedNumbers[5];
-        int randomNumber;
+        sleep_ms(1000);
+        // this->allOff();
 
-        for (int i = 0; i < 5; i++) {
-            while (true) {
-                bool stop = true;
-                randomNumber = rand() % ((20 + 1) - 0) + 0;
-                for (int j = 0; j < 5; j++) {
-                    if (randomNumber == usedNumbers[j]) {
-                        stop = false;
-                    }
-                }
+        // int usedNumbers[5];
+        // int randomNumber;
 
-                if (stop) {
-                    break;
-                }
-            }
-            this->words[randomNumber]->on();
-            usedNumbers[i] = randomNumber;
-        }
+        // for (int i = 0; i < 5; i++) {
+        //     while (true) {
+        //         bool stop = true;
+        //         randomNumber = rand() % ((20 + 1) - 0) + 0;
+        //         for (int j = 0; j < 5; j++) {
+        //             if (randomNumber == usedNumbers[j]) {
+        //                 stop = false;
+        //             }
+        //         }
+
+        //         if (stop) {
+        //             break;
+        //         }
+        //     }
+        //     this->words[randomNumber]->on();
+        //     usedNumbers[i] = randomNumber;
+        // }
     }
 }

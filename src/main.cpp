@@ -5,18 +5,23 @@ int main () {
     clock->setup();
     clock->test();
 
+    char string[50] = __TIME__;
+    char* token = strtok(string, ":");
+    int hour = atoi(token);
+    token = strtok(NULL, ":");
+    int minutes = atoi(token);
+    token = strtok(NULL, ":");
+    int seconds = atoi(token);
+
     datetime_t t = {
         .year  = 2022,
         .month = 12,
         .day   = 27,
         .dotw  = 3,
-        .hour  = 8,
-        .min   = 20,
-        .sec   = 00
+        .hour  = hour,
+        .min   = minutes,
+        .sec   = seconds
     };
-
-    int hour = clock->getHour();
-    int minutes = clock->getMinutes();
 
     clock->allOff();
     clock->decide_time();
@@ -32,34 +37,9 @@ int main () {
         clock->setMinutes(t.min);
         clock->setSeconds(t.sec);
 
-        if (minutes != clock->getMinutes() || hour != clock->getHour()) {
-            clock->allOff();
-            clock->decide_time();
-            clock->commit();
-            hour = clock->getHour();
-            minutes = clock->getMinutes();
-        }
-
-        int randomNumber = rand() % ((3 + 1) - 0) + 0;
-        int counter = 0;
-
-        if (randomNumber == 1) {
-            for (int i = 0; i < 50; i++) {
-                clock->random();
-                clock->commit();
-
-                if (counter == 10) {
-                    counter = 0;
-                }
-
-                sleep_ms(100);
-                counter++;
-            }
-
-            clock->allOff();
-            clock->decide_time();
-            clock->commit();
-        }
+        clock->allOff();
+        clock->decide_time();
+        clock->commit();
 
         sleep_ms(120000);
     }
