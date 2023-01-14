@@ -26,9 +26,7 @@ namespace Wordclock {
         for (int i = 0; i < 8 ; i++){
             gpio_put(this->getDataPin(), this->getData() & (1 << (7 - i)));
             gpio_put(this->getClockPin(), true);
-            sleep_us(5);
             gpio_put(this->getClockPin(), false);
-            sleep_us(5);
         }
 
         gpio_put(this->getLatchPin(), true);

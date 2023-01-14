@@ -31,6 +31,8 @@ target_include_directories(wordclock
 )
 
 target_link_libraries(wordclock pico_stdlib)
+target_link_libraries(wordclock pico_multicore)
 target_link_libraries(wordclock hardware_rtc)
+target_link_libraries(wordclock hardware_adc)
 
 pico_add_extra_outputs(wordclock)

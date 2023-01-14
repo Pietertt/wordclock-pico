@@ -37,9 +37,23 @@ namespace Wordclock {
     }
 
     void DoubleRegister::shiftOut() {
-        // if (this->getCopyData() == this->getData()) {
-        //     // return; // misschien sws een return voor snelheids controle
-        // }
+
+        bool actualBit = false;
+        bool copyBit = false;
+        bool ret = true;
+
+        for (int i = 0; i < 8; i++) {
+            actualBit = ((this->getData() >> i) & 0x01);
+            copyBit = ((this->getCopyData() >> i) & 0x01);
+
+            if (actualBit != copyBit) {
+                ret = false;
+            }
+        }
+
+        if (ret) {
+            return;
+        }
 
         this->getLatchRegister()->setData(0, this->getLatchPin());
         this->getLatchRegister()->shiftOut();
@@ -50,13 +64,13 @@ namespace Wordclock {
             
             this->getClockRegister()->setData(1, this->getClockPin());
             this->getClockRegister()->shiftOut();
-            sleep_us(5);
             this->getClockRegister()->setData(0, this->getClockPin());
             this->getClockRegister()->shiftOut();
-            sleep_us(5);
         }
 
         this->getLatchRegister()->setData(1, this->getLatchPin());
         this->getLatchRegister()->shiftOut();
+
+        this->setCopyData(this->getData());
     }
 }

@@ -18,7 +18,7 @@ namespace Wordclock {
             void decide_time();
             void blink();
             void commit();
-            void sleep(float milliseconds);
+            void sleep(float percentage);
 
             int getSeconds();
             void setSeconds(int seconds);

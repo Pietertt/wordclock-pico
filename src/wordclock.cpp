@@ -235,30 +235,32 @@ namespace Wordclock {
         this->d->shiftOut();
     }
 
-    void Wordclock::sleep(float milliseconds) {
-        int times = milliseconds / 10;
-
-        // const bool lowPower = (this->getHour() <= 9 || this->getHour() >= 16) ? true : false;
+    void Wordclock::sleep(float percentage) {
+        int total = 20000;
+        int up = total * (percentage / 100);
+        int down = total * ((100 - percentage) / 100);
 
         uint8_t copyB = b->getCopyData();
         uint8_t copyC = c->getCopyData();
         uint8_t copyD = d->getCopyData();
 
-        for (int i = 0; i < times; i++) {
+        for (int i = 0; i < 10000; i++) {
             b->setData(copyB);
             c->setData(copyC);
             d->setData(copyD);
             this->commit();
-
-            sleep_us((milliseconds / times) / 2);
+            sleep_us(up);
 
             b->setData(0b00000000);
             c->setData(0b00000000);
             d->setData(0b00000000);
             this->commit();
-
-            sleep_us((milliseconds / times) / 2);
+            sleep_us(down);
         }
+
+        b->setCopyData(copyB);
+        c->setCopyData(copyC);
+        d->setCopyData(copyD);
     }
 
     int Wordclock::getMinutes() {
@@ -287,35 +289,26 @@ namespace Wordclock {
 
     void Wordclock::random() {
         this->allOff();
-        this->allOn();
-        this->KWART->off();
-        // this->KWART->on();
-        // this->TIEN->on();
-        // this->HET->on();
-        this->commit();
 
-        sleep_ms(1000);
-        // this->allOff();
+        int usedNumbers[5];
+        int randomNumber;
 
-        // int usedNumbers[5];
-        // int randomNumber;
+        for (int i = 0; i < 5; i++) {
+            while (true) {
+                bool stop = true;
+                randomNumber = rand() % ((20 + 1) - 0) + 0;
+                for (int j = 0; j < 5; j++) {
+                    if (randomNumber == usedNumbers[j]) {
+                        stop = false;
+                    }
+                }
 
-        // for (int i = 0; i < 5; i++) {
-        //     while (true) {
-        //         bool stop = true;
-        //         randomNumber = rand() % ((20 + 1) - 0) + 0;
-        //         for (int j = 0; j < 5; j++) {
-        //             if (randomNumber == usedNumbers[j]) {
-        //                 stop = false;
-        //             }
-        //         }
-
-        //         if (stop) {
-        //             break;
-        //         }
-        //     }
-        //     this->words[randomNumber]->on();
-        //     usedNumbers[i] = randomNumber;
-        // }
+                if (stop) {
+                    break;
+                }
+            }
+            this->words[randomNumber]->on();
+            usedNumbers[i] = randomNumber;
+        }
     }
 }
